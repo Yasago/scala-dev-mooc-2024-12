@@ -3,6 +3,7 @@ package ru.otus.module1.futures
 import ru.otus.module1.futures.HomeworksUtils.TaskSyntax
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 object task_futures_sequence {
 
@@ -20,7 +21,13 @@ object task_futures_sequence {
    * @return асинхронную задачу с кортежом из двух списков
    */
   def fullSequence[A](futures: List[Future[A]])
-                     (implicit ex: ExecutionContext): Future[(List[A], List[Throwable])] =
-    task"Реализуйте метод `fullSequence`" ()
+                     (implicit ex: ExecutionContext): Future[(List[A], List[Throwable])] = {
+    futures.foldLeft(Future.successful((List[A](), List[Throwable]()))) { (res, future) =>
+      future transformWith {
+        case Failure(exception) => res.map(x => (x._1, x._2 :+ exception))
+        case Success(value) => res.map(x => (x._1 :+ value, x._2))
+      }
+    }
+  }
 
 }
