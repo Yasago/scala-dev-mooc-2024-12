@@ -117,7 +117,7 @@ object ReadFile extends IOApp.Simple {
 // spawn
 import cats.effect.{IO, Spawn}
 
-val task: IO[Int] = IO.sleep(1.second) *> IO.pure(42)
+/*val task: IO[Int] = IO.sleep(1.second) *> IO.pure(42)
 
 val program = for {
   fiber <- task.start
@@ -142,5 +142,5 @@ val asynctask: IO[Int] = IO.async_ {callback =>
       callback(Right(52))
     }
   }).start()
-}
+}*/
 
